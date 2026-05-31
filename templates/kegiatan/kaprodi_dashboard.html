@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Dashboard Kaprodi{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard Koordinator Program Studi S1 Fisioterapi</h1>
+</div>
+
+<div class="row">
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Penelitian & Pengabdian Dosen</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_kegiatan }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-folder fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Penelitian Dosen</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_penelitian }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-microscope fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Pengabdian Dosen</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_pengabdian }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users mb-1 fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% if mk_stats %}
+<div class="row">
+    <div class="col-12">
+        <h5 class="font-weight-bold text-dark mb-3">Persentase Integrasi Mata Kuliah</h5>
+    </div>
+    {% for year_data in mk_stats %}
+    <div class="col-xl-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 bg-light">
+                <h6 class="m-0 font-weight-bold text-info">Tahun Akademik: {{ year_data.tahun }}</h6>
+            </div>
+            <div class="card-body">
+                {% for item in year_data.items %}
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small font-weight-bold">{{ item.mk_nama }} (Total: {{ item.total }})</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 20px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ item.penelitian_pct }}%" 
+                             aria-valuenow="{{ item.penelitian_pct }}" aria-valuemin="0" aria-valuemax="100" 
+                             title="Penelitian: {{ item.penelitian_count }}">
+                            {{ item.penelitian_pct }}%
+                        </div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ item.pengabdian_pct }}%" 
+                             aria-valuenow="{{ item.pengabdian_pct }}" aria-valuemin="0" aria-valuemax="100" 
+                             title="Pengabdian: {{ item.pengabdian_count }}">
+                            {{ item.pengabdian_pct }}%
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span><i class="fas fa-circle text-info mr-1"></i> Penelitian ({{ item.penelitian_count }})</span>
+                        <span><i class="fas fa-circle text-warning mr-1"></i> Pengabdian ({{ item.pengabdian_count }})</span>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center text-muted">Tidak ada data integrasi.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-success">Monitoring Seluruh Kegiatan (Prodi)</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Dosen</th>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Status</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in semua_kegiatan %}
+                    <tr>
+                        <td>{{ item.dosen.username }}</td>
+                        <td>{{ item.judul }}</td>
+                        <td>{{ item.get_kategori_display }}</td>
+                        <td>
+                            <span class="badge badge-info">
+                                {{ item.get_status_pelaksanaan_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'detail_kegiatan' item.pk %}" class="btn btn-outline-info btn-sm">Lihat</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

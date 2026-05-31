@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profil Pengguna{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Profil Saya</h1>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informasi Akun</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" name="btn_informasi_akun" class="btn btn-primary">
+                                <i class="fas fa-save fa-sm text-white-50 mr-2"></i> Simpan Perubahan
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Kembali</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div>
+                        {% if user.role == 'DOSEN' %}
+                        <h6 class="m-0 font-weight-bold text-primary">S1 Fisioterapi</h6>
+                        {% else %}
+                        <h6 class="m-0 font-weight-bold text-primary">Detail Jabatan / Peran</h6>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editJabatanModal">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Role Akses
+                            <span class="badge badge-primary badge-pill">{{ user.get_role_display }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Fakultas
+                            <span class="font-weight-bold text-gray-800">{{ user.fakultas.nama|default:"Belum Ditentukan" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Program Studi
+                            <span class="font-weight-bold text-gray-800">{{ user.prodi.nama|default:"Belum Ditentukan" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Username / Akun
+                            <span class="font-weight-bold text-gray-800">{{ user.username }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Jabatan -->
+<div class="modal fade" id="editJabatanModal" tabindex="-1" role="dialog" aria-labelledby="editJabatanModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editJabatanModalLabel">Edit Detail Jabatan / Peran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ jabatan_form|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" name="btn_jabatan_peran" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+{% endblock %}

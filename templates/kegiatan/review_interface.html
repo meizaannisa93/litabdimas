@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Review Dokumen Laporan Akhir{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Review Laporan: {{ kegiatan.judul }}</h1>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+</div>
+
+<div class="row">
+    <!-- Kolom Kanan: Detail & Form Approval -->
+    <div class="col-xl-6 col-lg-6 mx-auto">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">Informasi Kegiatan</h6>
+            </div>
+            <div class="card-body">
+                <div class="small mb-3">
+                    <strong>Dosen:</strong> {{ kegiatan.dosen.username }}<br>
+                    <strong>Kategori:</strong> {{ kegiatan.get_kategori_display }}<br>
+                    <strong>Tahun Akademik:</strong> {{ kegiatan.tahun_akademik }}<br>
+                </div>
+                
+                <hr>
+                
+                {% if kegiatan.review_logs.exists %}
+                    <h6 class="font-weight-bold small mt-3">Histori Review Sebelumnya:</h6>
+                    <div class="small">
+                    {% for rev in kegiatan.review_logs.all|dictsortreversed:"created_at" %}
+                        <div class="mb-2 {% if rev.keputusan == 'APPROVE' %}text-success{% else %}text-danger{% endif %} border-left-{{ rev.keputusan|lower }} pl-2">
+                            <strong>{{ rev.get_tingkat_display }} ({{ rev.get_keputusan_display }})</strong><br>
+                            <span class="text-muted">{{ rev.created_at|date:"d M H:i" }} - {{ rev.aktor.username }}</span><br>
+                            {% if rev.catatan %}<em>"{{ rev.catatan }}"</em>{% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <hr>
+                {% endif %}
+                
+                <h6 class="font-weight-bold text-primary mt-3">Form Evaluasi {{ user.get_role_display }}</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary btn-block mt-3"><i class="fas fa-save"></i> Simpan Evaluasi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Detail Kegiatan: {{ kegiatan.judul }}{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Detail Kegiatan</h1>
+    <div>
+        {% if user.role == 'DOSEN' and kegiatan.dosen == user %}
+        <a href="{% url 'edit_kegiatan' kegiatan.pk %}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i> Edit Kegiatan</a>
+        {% endif %}
+        <a href="{% url 'dosen_dashboard' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Informasi Kegiatan -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">{{ kegiatan.judul }}</h6>
+                <span class="badge badge-info">{{ kegiatan.get_status_pelaksanaan_display }}</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Dosen Pengusul:</strong> {{ kegiatan.dosen.username }}</p>
+                        <p><strong>Fakultas/Prodi:</strong> {{ kegiatan.dosen.fakultas }} / {{ kegiatan.dosen.prodi }}</p>
+                        <p><strong>Kategori Kinerja:</strong> {{ kegiatan.get_kategori_display }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Tahun Akademik:</strong> {{ kegiatan.tahun_akademik }}</p>
+                        <p><strong>Semester:</strong> {{ kegiatan.get_semester_display }}</p>
+                        <p><strong>Integrasi MK:</strong> {{ kegiatan.integrasi_mata_kuliah.nama|default:"-" }}</p>
+                        <p><strong>Tanggal Diajukan:</strong> {{ kegiatan.created_at|date:"d M Y" }}</p>
+                    </div>
+                </div>
+                <hr>
+                <h6><strong>Deskripsi:</strong></h6>
+                <p>{{ kegiatan.deskripsi }}</p>
+
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="font-weight-bold text-primary mb-0">Dokumen Pendukung</h6>
+                    {% if user.role == 'DOSEN' and kegiatan.status == 'ONGOING' %}
+                    <a href="{% url 'upload_laporan' kegiatan.pk %}" class="btn btn-warning btn-sm">Upload Laporan Akhir</a>
+                    {% endif %}
+                </div>
+                
+                <div class="list-group">
+                    {% for doc in dokumens %}
+                    <a href="{{ doc.file.url }}" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ doc.get_jenis_display }}</strong><br>
+                            <small class="text-muted">Diunggah pada: {{ doc.uploaded_at|date:"d M Y, H:i" }}</small>
+                            {% if doc.deskripsi %}
+                            <p class="mb-0 mt-1 small">{{ doc.deskripsi }}</p>
+                            {% endif %}
+                        </div>
+                        <span class="badge badge-primary badge-pill"><i class="fas fa-download"></i> Unduh</span>
+                    </a>
+                    {% empty %}
+                    <p class="text-muted">Belum ada dokumen yang diunggah.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline & Milestone -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-success">Milestones / Log Progres</h6>
+                {% if user.role == 'DOSEN' and 'WAITING' not in kegiatan.status and 'REVISION' not in kegiatan.status and kegiatan.status != 'APPROVED_FINAL' %}
+                <a href="{% url 'tambah_milestone' kegiatan.pk %}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah</a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for ms in milestones %}
+                    <div class="mb-3 border-left-success pl-3">
+                        <div class="small text-gray-500">{{ ms.tanggal|date:"d M Y" }}</div>
+                        <div class="font-weight-bold text-gray-800">{{ ms.deskripsi }}</div>
+                        <div class="small text-muted">Ditambahkan oleh: {{ ms.created_by.username }}</div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted small">Belum ada milestone progres.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-danger">Riwayat Review Kaprodi/Dekan</h6>
+                {% if user.role == 'KAPRODI' %}
+                <a href="{% url 'review_kegiatan' kegiatan.pk %}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Beri Review</a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% for review in reviews %}
+                <div class="alert 
+                    {% if review.keputusan == 'APPROVE' %}alert-success
+                    {% elif review.keputusan == 'REVISE' %}alert-warning
+                    {% else %}alert-danger{% endif %} mb-3">
+                    <strong>{{ review.get_tingkat_display }} - {{ review.get_keputusan_display }}</strong><br>
+                    <small>Oleh: {{ review.aktor.username }} | {{ review.created_at|date:"d M Y, H:i" }}</small>
+                    {% if review.catatan %}
+                    <hr class="mt-2 mb-2 border-dark">
+                    <p class="mb-0 small"><strong>Catatan:</strong> {{ review.catatan }}</p>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="text-muted small">Belum ada riwayat review.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

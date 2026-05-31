@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Tambah Kegiatan Baru{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Form Pengajuan Kegiatan</h1>
+    <a href="{% url 'dosen_dashboard' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h5 class="font-weight-bold text-primary mb-3">Data Kegiatan</h5>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form|crispy }}
+                </div>
+            </div>
+            
+            <hr>
+            
+            <h5 class="font-weight-bold text-primary mb-3 mt-4">Dokumen Artikel</h5>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ dokumen_form|crispy }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

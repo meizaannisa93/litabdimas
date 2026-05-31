@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Notifikasi{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Semua Notifikasi</h1>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Riwayat Pesan & Peringatan</h6>
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            {% for notif in notifikasi %}
+            <a href="{% if notif.kegiatan %}{% url 'detail_kegiatan' notif.kegiatan.pk %}{% else %}#{% endif %}" class="list-group-item list-group-item-action flex-column align-items-start {% if not notif.is_read %}active{% endif %}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1 font-weight-bold">{{ notif.kegiatan.judul|default:"Sistem FIKES UPNVJ" }}</h6>
+                    <small>{{ notif.created_at|date:"d M Y, H:i" }}</small>
+                </div>
+                <p class="mb-1">{{ notif.pesan }}</p>
+            </a>
+            {% empty %}
+            <div class="text-center text-muted p-4">Anda belum memiliki notifikasi.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

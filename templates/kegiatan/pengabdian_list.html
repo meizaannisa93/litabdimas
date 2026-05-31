@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Pengabdian Masyarakat{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Daftar Kegiatan Pengabdian Masyarakat</h1>
+    {% if user.role == 'DOSEN' %}
+    <a href="{% url 'tambah_kegiatan' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Kegiatan
+    </a>
+    {% endif %}
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Pengabdian Masyarakat</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        {% if user.role != 'DOSEN' %}
+                        <th>Nama Dosen</th>
+                        {% endif %}
+                        <th>Judul Kegiatan</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                        <th>Integrasi Mata Kuliah</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in kegiatans %}
+                    <tr>
+                        {% if user.role != 'DOSEN' %}
+                        <td>{{ item.dosen.get_full_name|default:item.dosen.username }}</td>
+                        {% endif %}
+                        <td>{{ item.judul }}</td>
+                        
+                        <td>{{ item.get_status_pelaksanaan_display }}</td>
+                        
+                        <td>
+                            {% if item.link_jurnal %}
+                                <a href="{{ item.link_jurnal }}" target="_blank" class="btn btn-sm btn-info">Buka Link</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ item.integrasi_mata_kuliah|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'detail_kegiatan' item.pk %}" class="btn btn-primary btn-sm">Detail</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="{% if user.role == 'DOSEN' %}5{% else %}6{% endif %}" class="text-center">Belum ada kegiatan pengabdian.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Tambah Milestone{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Catat Progres Pelaksanaan</h1>
+    <a href="{% url 'detail_kegiatan' kegiatan.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Form Tambah Milestone</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">Kegiatan: <strong>{{ kegiatan.judul }}</strong></p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-success mt-3"><i class="fas fa-save"></i> Simpan Milestone</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
