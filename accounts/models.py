@@ -27,6 +27,8 @@ class CustomUser(AbstractUser):
     nip = models.CharField(max_length=50, null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     google_scholar_link = models.URLField(blank=True, null=True)
+    scopus_link = models.URLField(blank=True, null=True, verbose_name='Link Scopus')
+    roadmap_link = models.URLField(blank=True, null=True, verbose_name='Link Roadmap')
     
     def __str__(self):
         return f"{self.username} - {self.get_role_display()}"
