@@ -72,12 +72,16 @@
                 <h6 class="m-0 font-weight-bold text-info">Tahun Akademik: {{ chart.tahun }}</h6>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <canvas id="pieChart{{ forloop.counter }}"></canvas>
+                <div class="row align-items-stretch">
+                    <div class="col-md-6 d-flex">
+                        <div class="chart-wrapper flex-fill">
+                            <canvas id="pieChart{{ forloop.counter }}"></canvas>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <canvas id="donutChart{{ forloop.counter }}"></canvas>
+                    <div class="col-md-6 d-flex">
+                        <div class="chart-wrapper flex-fill">
+                            <canvas id="donutChart{{ forloop.counter }}"></canvas>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -148,9 +152,16 @@
 
 {% block extra_css %}
 <style>
-    canvas {
-        max-height: 220px;
+    .chart-wrapper {
+        position: relative;
+        min-height: 200px;
+        width: 100%;
+    }
+    .chart-wrapper canvas {
+        max-height: 200px;
         max-width: 100%;
+        width: 100% !important;
+        height: auto !important;
     }
 </style>
 {% endblock %}
