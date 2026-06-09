@@ -61,6 +61,29 @@
                             Username / Akun
                             <span class="font-weight-bold text-gray-800">{{ user.username }}</span>
                         </li>
+                        {% if user.google_scholar_link or user.scopus_link or user.roadmap_link %}
+                        <li class="list-group-item bg-light">
+                            <small class="text-uppercase text-muted font-weight-bold">Link Profil</small>
+                        </li>
+                        {% if user.google_scholar_link %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Google Scholar
+                            <a href="{{ user.google_scholar_link }}" target="_blank" class="text-primary small">Buka Link <i class="fas fa-external-link-alt fa-xs"></i></a>
+                        </li>
+                        {% endif %}
+                        {% if user.scopus_link %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Scopus
+                            <a href="{{ user.scopus_link }}" target="_blank" class="text-primary small">Buka Link <i class="fas fa-external-link-alt fa-xs"></i></a>
+                        </li>
+                        {% endif %}
+                        {% if user.roadmap_link %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Roadmap
+                            <a href="{{ user.roadmap_link }}" target="_blank" class="text-primary small">Buka Link <i class="fas fa-external-link-alt fa-xs"></i></a>
+                        </li>
+                        {% endif %}
+                        {% endif %}
                     </ul>
                 </div>
             </div>

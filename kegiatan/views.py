@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -241,6 +242,21 @@ def kaprodi_dashboard(request):
             })
         mk_stats.append(year_data)
 
+    # Chart data per tahun (total per MK - untuk pie chart)
+    mk_chart_data = []
+    for year_data in mk_stats:
+        labels = [item['mk_nama'] for item in year_data['items']]
+        data = [item['total'] for item in year_data['items']]
+        penelitian_counts = [item['penelitian_count'] for item in year_data['items']]
+        pengabdian_counts = [item['pengabdian_count'] for item in year_data['items']]
+        mk_chart_data.append({
+            'tahun': year_data['tahun'],
+            'labels': json.dumps(labels),
+            'data': json.dumps(data),
+            'penelitian_counts': json.dumps(penelitian_counts),
+            'pengabdian_counts': json.dumps(pengabdian_counts),
+        })
+
     context = {
         'pending_kegiatans': pending_kegiatans,
         'semua_kegiatan': semua_kegiatan,
@@ -248,6 +264,7 @@ def kaprodi_dashboard(request):
         'total_penelitian': total_penelitian,
         'total_pengabdian': total_pengabdian,
         'mk_stats': mk_stats,
+        'mk_chart_data': mk_chart_data,
     }
     return render(request, 'kegiatan/kaprodi_dashboard.html', context)
 
