@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}Dashboard Kaprodi{% endblock %}
@@ -157,6 +158,63 @@
 {% block extra_js %}
 <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 <script>
+// Custom plugin to draw percentage on pie slices
+var percentagePlugin = {
+    afterDraw: function(chart) {
+        if (chart.config.type !== 'pie') return;
+        var ctx = chart.chart.ctx;
+        var datasets = chart.data.datasets;
+        var meta = chart.getDatasetMeta(0);
+        if (!meta.data.length) return;
+
+        var total = datasets[0].data.reduce(function(a, b) { return a + b; }, 0);
+        if (total === 0) return;
+
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 12px Nunito, sans-serif';
+
+        meta.data.forEach(function(element, index) {
+            var model = element._model;
+            var pct = ((datasets[0].data[index] / total) * 100).toFixed(1);
+            if (pct > 5) {
+                ctx.fillStyle = '#fff';
+                ctx.fillText(pct + '%', model.x, model.y);
+            }
+        });
+        ctx.restore();
+    }
+};
+
+// Custom plugin to draw total in donut center
+var donutCenterPlugin = {
+    afterDraw: function(chart) {
+        if (chart.config.type !== 'doughnut') return;
+        var ctx = chart.chart.ctx;
+        var datasets = chart.data.datasets;
+        var total = datasets[0].data.reduce(function(a, b) { return a + b; }, 0);
+        if (total === 0) return;
+
+        var centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+        var centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 22px Nunito, sans-serif';
+        ctx.fillStyle = '#5a5c69';
+        ctx.fillText(total, centerX, centerY - 8);
+        ctx.font = '10px Nunito, sans-serif';
+        ctx.fillStyle = '#858796';
+        ctx.fillText('Total', centerX, centerY + 14);
+        ctx.restore();
+    }
+};
+
+Chart.pluginService.register(percentagePlugin);
+Chart.pluginService.register(donutCenterPlugin);
+
 $(document).ready(function() {
     {% for chart in mk_chart_data %}
     // Pie Chart - Total per MK
@@ -182,7 +240,9 @@ $(document).ready(function() {
                     label: function(tooltipItem, data) {
                         var label = data.labels[tooltipItem.index] || '';
                         var val = data.datasets[0].data[tooltipItem.index];
-                        return label + ': ' + val + ' kegiatan';
+                        var total = data.datasets[0].data.reduce(function(a,b){return a+b}, 0);
+                        var pct = ((val / total) * 100).toFixed(1);
+                        return label + ': ' + val + ' (' + pct + '%)';
                     }
                 }
             }
