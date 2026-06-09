@@ -24,13 +24,21 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Dosen Pengusul:</strong> {{ kegiatan.dosen.username }}</p>
+                        <p><strong>Dosen Pengusul:</strong> {{ kegiatan.dosen.get_full_name|default:kegiatan.dosen.username }}</p>
+                        <p><strong>Tim Dosen:</strong> 
+                            {% for td in kegiatan.tim_dosen.all %}
+                                {{ td.get_full_name|default:td.username }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </p>
                         <p><strong>Fakultas/Prodi:</strong> {{ kegiatan.dosen.fakultas }} / {{ kegiatan.dosen.prodi }}</p>
                         <p><strong>Kategori Kinerja:</strong> {{ kegiatan.get_kategori_display }}</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Tahun Akademik:</strong> {{ kegiatan.tahun_akademik }}</p>
                         <p><strong>Semester:</strong> {{ kegiatan.get_semester_display }}</p>
+                        <p><strong>Sumber Pendanaan:</strong> {{ kegiatan.get_sumber_pendanaan_display }}</p>
                         <p><strong>Integrasi MK:</strong> {{ kegiatan.integrasi_mata_kuliah.nama|default:"-" }}</p>
                         <p><strong>Tanggal Diajukan:</strong> {{ kegiatan.created_at|date:"d M Y" }}</p>
                     </div>

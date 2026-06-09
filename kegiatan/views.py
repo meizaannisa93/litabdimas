@@ -48,6 +48,7 @@ def tambah_kegiatan(request):
                 kegiatan.dosen = request.user
                 kegiatan.status = 'ONGOING'
                 kegiatan.save()
+                form.save_m2m()
                 
                 dokumen = dokumen_form.save(commit=False)
                 dokumen.kegiatan = kegiatan
@@ -85,6 +86,7 @@ def edit_kegiatan(request, pk):
                     kegiatan.status = 'ONGOING'
                     
                 kegiatan.save()
+                form.save_m2m()
                 
                 dokumen = dokumen_form.save(commit=False)
                 dokumen.kegiatan = kegiatan

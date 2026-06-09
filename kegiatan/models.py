@@ -66,6 +66,21 @@ class Kegiatan(models.Model):
         null=True, blank=True,
         verbose_name='Integrasi Mata Kuliah'
     )
+    SUMBER_PENDANAAN_CHOICES = [
+        ('MANDIRI', 'Mandiri'),
+        ('HIBAH', 'Hibah'),
+    ]
+    sumber_pendanaan = models.CharField(
+        max_length=20,
+        choices=SUMBER_PENDANAAN_CHOICES,
+        default='MANDIRI',
+        verbose_name='Sumber Pendanaan'
+    )
+    tim_dosen = models.ManyToManyField(
+        CustomUser,
+        related_name='tim_kegiatan',
+        verbose_name='Tim Dosen'
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
