@@ -54,8 +54,12 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('.select2-multiple').select2({
+        $('#id_tim_dosen').select2({
             placeholder: "  -- Pilih Tim Dosen --",
+            allowClear: true
+        });
+        $('#id_integrasi_mata_kuliah').select2({
+            placeholder: "  -- Pilih Mata Kuliah --",
             allowClear: true
         });
     });

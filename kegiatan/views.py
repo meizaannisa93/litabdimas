@@ -206,7 +206,7 @@ def kaprodi_dashboard(request):
     # Statistik Integrasi Mata Kuliah
     stats_raw = semua_kegiatan.exclude(integrasi_mata_kuliah=None).values(
         'tahun_akademik', 'integrasi_mata_kuliah__nama', 'kategori'
-    ).annotate(count=Count('id'))
+    ).annotate(count=Count('id')).order_by()
 
     mk_stats_dict = {}
     for item in stats_raw:

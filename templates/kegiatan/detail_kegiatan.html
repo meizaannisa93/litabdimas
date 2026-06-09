@@ -39,7 +39,13 @@
                         <p><strong>Tahun Akademik:</strong> {{ kegiatan.tahun_akademik }}</p>
                         <p><strong>Semester:</strong> {{ kegiatan.get_semester_display }}</p>
                         <p><strong>Sumber Pendanaan:</strong> {{ kegiatan.get_sumber_pendanaan_display }}</p>
-                        <p><strong>Integrasi MK:</strong> {{ kegiatan.integrasi_mata_kuliah.nama|default:"-" }}</p>
+                        <p><strong>Integrasi MK:</strong>
+                            {% for mk in kegiatan.integrasi_mata_kuliah.all %}
+                                {{ mk.nama }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </p>
                         <p><strong>Tanggal Diajukan:</strong> {{ kegiatan.created_at|date:"d M Y" }}</p>
                     </div>
                 </div>

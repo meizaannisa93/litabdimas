@@ -61,9 +61,9 @@ class Kegiatan(models.Model):
     status_pelaksanaan = models.CharField(max_length=20, choices=STATUS_PELAKSANAAN_CHOICES, default='ONGOING')
     kategori_status = models.CharField(max_length=50, blank=True, null=True)
     link_jurnal = models.URLField(blank=True, null=True)
-    integrasi_mata_kuliah = models.ForeignKey(
-        'MataKuliah', on_delete=models.SET_NULL,
-        null=True, blank=True,
+    integrasi_mata_kuliah = models.ManyToManyField(
+        'MataKuliah',
+        blank=True,
         verbose_name='Integrasi Mata Kuliah'
     )
     SUMBER_PENDANAAN_CHOICES = [

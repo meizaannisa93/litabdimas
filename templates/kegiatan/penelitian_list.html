@@ -48,7 +48,13 @@
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ item.integrasi_mata_kuliah|default:"-" }}</td>
+                        <td>
+                            {% for mk in item.integrasi_mata_kuliah.all %}
+                                {{ mk.nama }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </td>
                         <td>
                             <a href="{% url 'detail_kegiatan' item.pk %}" class="btn btn-primary btn-sm">Detail</a>
                         </td>

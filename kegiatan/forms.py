@@ -38,14 +38,13 @@ class KegiatanForm(forms.ModelForm):
         }
         widgets = {
             'deskripsi': forms.Textarea(attrs={'rows': 3}),
-            'integrasi_mata_kuliah': forms.Select(attrs={'class': 'form-control'}),
+            'integrasi_mata_kuliah': forms.SelectMultiple(attrs={'class': 'form-control select2-multiple'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['tahun_akademik'].choices = get_tahun_akademik_choices()
         self.fields['integrasi_mata_kuliah'].queryset = MataKuliah.objects.all()
-        self.fields['integrasi_mata_kuliah'].empty_label = '-- Pilih Mata Kuliah --'
         self.fields['integrasi_mata_kuliah'].required = False
         self.fields['tim_dosen'].queryset = CustomUser.objects.filter(role='DOSEN')
 
