@@ -154,14 +154,12 @@
 <style>
     .chart-wrapper {
         position: relative;
-        min-height: 200px;
+        height: 220px;
         width: 100%;
     }
     .chart-wrapper canvas {
-        max-height: 200px;
-        max-width: 100%;
         width: 100% !important;
-        height: auto !important;
+        height: 100% !important;
     }
 </style>
 {% endblock %}
@@ -245,6 +243,7 @@ $(document).ready(function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             legend: { position: 'bottom', labels: { boxWidth: 12, fontStyle: 'bold' } },
             tooltips: {
                 callbacks: {
@@ -277,6 +276,7 @@ $(document).ready(function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             cutoutPercentage: 50,
             legend: { position: 'bottom', labels: { boxWidth: 12, fontStyle: 'bold' } },
             tooltips: {
