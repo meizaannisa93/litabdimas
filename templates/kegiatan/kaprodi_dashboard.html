@@ -167,7 +167,7 @@
 {% block extra_js %}
 <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 <script>
-// Custom plugin to draw percentage on pie slices
+// Custom plugin to draw percentage on each pie slice
 var percentagePlugin = {
     afterDraw: function(chart) {
         if (chart.config.type !== 'pie') return;
@@ -182,15 +182,21 @@ var percentagePlugin = {
         ctx.save();
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = 'bold 12px Nunito, sans-serif';
+        ctx.font = 'bold 13px Nunito, sans-serif';
 
         meta.data.forEach(function(element, index) {
             var model = element._model;
             var pct = ((datasets[0].data[index] / total) * 100).toFixed(1);
-            if (pct > 5) {
-                ctx.fillStyle = '#fff';
-                ctx.fillText(pct + '%', model.x, model.y);
-            }
+            if (pct <= 5) return;
+
+            // Calculate center of each slice
+            var midAngle = (model.startAngle + model.endAngle) / 2;
+            var radius = model.outerRadius * 0.55;
+            var x = model.x + Math.cos(midAngle) * radius;
+            var y = model.y + Math.sin(midAngle) * radius;
+
+            ctx.fillStyle = '#fff';
+            ctx.fillText(pct + '%', x, y);
         });
         ctx.restore();
     }
