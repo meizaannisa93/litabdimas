@@ -42,7 +42,7 @@ def dosen_dashboard(request):
 def tambah_kegiatan(request):
     if request.method == 'POST':
         form = KegiatanForm(request.POST)
-        dokumen_form = DokumenForm(request.POST, request.FILES)
+        dokumen_form = DokumenForm(request.POST, request.FILES, prefix='dokumen')
         if form.is_valid() and dokumen_form.is_valid():
             with transaction.atomic():
                 kegiatan = form.save(commit=False)
@@ -61,7 +61,7 @@ def tambah_kegiatan(request):
             return redirect('dosen_dashboard')
     else:
         form = KegiatanForm()
-        dokumen_form = DokumenForm()
+        dokumen_form = DokumenForm(prefix='dokumen')
         
     return render(request, 'kegiatan/tambah_kegiatan.html', {
         'form': form,
@@ -77,7 +77,7 @@ def edit_kegiatan(request, pk):
     
     if request.method == 'POST':
         form = KegiatanForm(request.POST, instance=kegiatan)
-        dokumen_form = DokumenForm(request.POST, request.FILES, instance=proposal_doc)
+        dokumen_form = DokumenForm(request.POST, request.FILES, instance=proposal_doc, prefix='dokumen')
         
         if form.is_valid() and dokumen_form.is_valid():
             with transaction.atomic():
@@ -100,7 +100,7 @@ def edit_kegiatan(request, pk):
             return redirect('detail_kegiatan', pk=kegiatan.pk)
     else:
         form = KegiatanForm(instance=kegiatan)
-        dokumen_form = DokumenForm(instance=proposal_doc)
+        dokumen_form = DokumenForm(instance=proposal_doc, prefix='dokumen')
         
     return render(request, 'kegiatan/edit_kegiatan.html', {
         'form': form,
