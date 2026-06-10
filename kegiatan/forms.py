@@ -60,6 +60,7 @@ class DokumenForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['file'].required = False
+        self.fields['deskripsi'].required = False
 
 class LaporanAkhirForm(forms.ModelForm):
     class Meta:
