@@ -29,10 +29,11 @@
                     <h6 class="font-weight-bold small mt-3">Histori Review Sebelumnya:</h6>
                     <div class="small">
                     {% for rev in kegiatan.review_logs.all|dictsortreversed:"created_at" %}
-                        <div class="mb-2 {% if rev.keputusan == 'APPROVE' %}text-success{% else %}text-danger{% endif %} border-left-{{ rev.keputusan|lower }} pl-2">
-                            <strong>{{ rev.get_tingkat_display }} ({{ rev.get_keputusan_display }})</strong><br>
+                        <div class="mb-2 border-left-info pl-2">
+                            <strong>{{ rev.get_tingkat_display }}</strong><br>
                             <span class="text-muted">{{ rev.created_at|date:"d M H:i" }} - {{ rev.aktor.username }}</span><br>
-                            {% if rev.catatan %}<em>"{{ rev.catatan }}"</em>{% endif %}
+                            <span class="small">Roadmap: <span class="{% if rev.keputusan_roadmap == 'APPROVE' %}text-success{% else %}text-danger{% endif %}">{{ rev.get_keputusan_roadmap_display }}</span> | Integrasi MK: <span class="{% if rev.keputusan_integrasi_mk == 'APPROVE' %}text-success{% else %}text-danger{% endif %}">{{ rev.get_keputusan_integrasi_mk_display }}</span></span>
+                            {% if rev.catatan %}<br><em class="small">"{{ rev.catatan }}"</em>{% endif %}
                         </div>
                     {% endfor %}
                     </div>

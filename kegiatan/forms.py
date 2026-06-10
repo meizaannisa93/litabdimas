@@ -78,7 +78,13 @@ class MilestoneLogForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = ReviewLog
-        fields = ['keputusan', 'catatan']
+        fields = ['keputusan_roadmap', 'keputusan_integrasi_mk', 'catatan']
+        labels = {
+            'keputusan_roadmap': 'Keputusan Roadmap',
+            'keputusan_integrasi_mk': 'Keputusan Integrasi Mata Kuliah',
+        }
         widgets = {
+            'keputusan_roadmap': forms.Select(attrs={'class': 'form-control'}),
+            'keputusan_integrasi_mk': forms.Select(attrs={'class': 'form-control'}),
             'catatan': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Berikan catatan (wajib jika direvisi).'}),
         }

@@ -278,25 +278,30 @@ def review_kegiatan(request, pk):
         form = ReviewForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
-                keputusan = form.cleaned_data['keputusan']
+                keputusan_roadmap = form.cleaned_data['keputusan_roadmap']
+                keputusan_integrasi_mk = form.cleaned_data['keputusan_integrasi_mk']
                 catatan = form.cleaned_data['catatan']
                 
                 review = ReviewLog(
                     kegiatan=kegiatan,
                     aktor=request.user,
-                    keputusan=keputusan,
+                    keputusan_roadmap=keputusan_roadmap,
+                    keputusan_integrasi_mk=keputusan_integrasi_mk,
                     catatan=catatan
                 )
                 
+                # Progress status jika keduanya approve
+                all_approved = (keputusan_roadmap == 'APPROVE' and keputusan_integrasi_mk == 'APPROVE')
+                
                 if request.user.role == 'KAPRODI':
                     review.tingkat = 'KAPRODI'
-                    if keputusan == 'APPROVE':
+                    if all_approved:
                         kegiatan.status = 'WAITING_DEKAN_REVIEW'
                     else:
                         kegiatan.status = 'REVISION_KAPRODI'
                 elif request.user.role == 'DEKAN':
                     review.tingkat = 'DEKAN'
-                    if keputusan == 'APPROVE':
+                    if all_approved:
                         kegiatan.status = 'APPROVED_FINAL'
                     else:
                         kegiatan.status = 'REVISION_DEKAN'
@@ -304,7 +309,7 @@ def review_kegiatan(request, pk):
                 review.save()
                 kegiatan.save()
                 
-            messages.success(request, f'Review berhasil disimpan sebagai {keputusan}.')
+            messages.success(request, f'Review berhasil disimpan.')
             return redirect('dashboard')
     else:
         form = ReviewForm()

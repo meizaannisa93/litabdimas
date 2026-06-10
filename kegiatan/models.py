@@ -128,12 +128,13 @@ class ReviewLog(models.Model):
     kegiatan = models.ForeignKey(Kegiatan, on_delete=models.CASCADE, related_name='review_logs')
     aktor = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     tingkat = models.CharField(max_length=20, choices=TINGKAT_CHOICES)
-    keputusan = models.CharField(max_length=20, choices=KEPUTUSAN_CHOICES)
+    keputusan_roadmap = models.CharField(max_length=20, choices=KEPUTUSAN_CHOICES, default='APPROVE', verbose_name='Keputusan Roadmap')
+    keputusan_integrasi_mk = models.CharField(max_length=20, choices=KEPUTUSAN_CHOICES, default='APPROVE', verbose_name='Keputusan Integrasi Mata Kuliah')
     catatan = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.get_keputusan_display()} by {self.aktor.username}"
+        return f"Review by {self.aktor.username}"
 
 class Notifikasi(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifikasi')

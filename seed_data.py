@@ -97,7 +97,7 @@ def create_demo_data():
     )
     Dokumen.objects.create(kegiatan=k3, jenis="PROPOSAL", file="prop3.pdf")
     Dokumen.objects.create(kegiatan=k3, jenis="LAPORAN_AKHIR", file="lap3_v1.pdf")
-    ReviewLog.objects.create(kegiatan=k3, aktor=kaprodi_kep, tingkat="KAPRODI", keputusan="REVISE", catatan="Metodologi pada laporan akhir kurang detail bagian instrumen.")
+    ReviewLog.objects.create(kegiatan=k3, aktor=kaprodi_kep, tingkat="KAPRODI", keputusan_roadmap="REVISE", keputusan_integrasi_mk="REVISE", catatan="Metodologi pada laporan akhir kurang detail bagian instrumen.")
 
     # Scenario 4: Menunggu Review Dekan (Dosen Kesmas)
     k4 = Kegiatan.objects.create(
@@ -107,7 +107,7 @@ def create_demo_data():
     )
     Dokumen.objects.create(kegiatan=k4, jenis="PROPOSAL", file="prop4.pdf")
     Dokumen.objects.create(kegiatan=k4, jenis="LAPORAN_AKHIR", file="lap4_final.pdf")
-    ReviewLog.objects.create(kegiatan=k4, aktor=kaprodi_kep, tingkat="KAPRODI", keputusan="APPROVE", catatan="Bagus, layak diajukan ke Dekan.")
+    ReviewLog.objects.create(kegiatan=k4, aktor=kaprodi_kep, tingkat="KAPRODI", keputusan_roadmap="APPROVE", keputusan_integrasi_mk="APPROVE", catatan="Bagus, layak diajukan ke Dekan.")
 
     # Scenario 5: Approved Final (Dosen Keperawatan)
     k5 = Kegiatan.objects.create(
@@ -117,8 +117,8 @@ def create_demo_data():
     )
     Dokumen.objects.create(kegiatan=k5, jenis="PROPOSAL", file="prop5.pdf")
     Dokumen.objects.create(kegiatan=k5, jenis="LAPORAN_AKHIR", file="lap5_complete.pdf")
-    ReviewLog.objects.create(kegiatan=k5, aktor=kaprodi_kep, tingkat="KAPRODI", keputusan="APPROVE", catatan="Sesuai target.")
-    ReviewLog.objects.create(kegiatan=k5, aktor=dekan_fikes, tingkat="DEKAN", keputusan="APPROVE", catatan="Sangat bermanfaat bagi masyarakat.")
+    ReviewLog.objects.create(kegiatan=k5, aktor=kaprodi_kep, tingkat="KAPRODI", keputusan_roadmap="APPROVE", keputusan_integrasi_mk="APPROVE", catatan="Sesuai target.")
+    ReviewLog.objects.create(kegiatan=k5, aktor=dekan_fikes, tingkat="DEKAN", keputusan_roadmap="APPROVE", keputusan_integrasi_mk="APPROVE", catatan="Sangat bermanfaat bagi masyarakat.")
     
     print("\nData FIKES Berhasil Diperbarui!")
     print("Login credentials:")

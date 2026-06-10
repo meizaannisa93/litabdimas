@@ -127,14 +127,23 @@
             </div>
             <div class="card-body">
                 {% for review in reviews %}
-                <div class="alert 
-                    {% if review.keputusan == 'APPROVE' %}alert-success
-                    {% elif review.keputusan == 'REVISE' %}alert-warning
-                    {% else %}alert-danger{% endif %} mb-3">
-                    <strong>{{ review.get_tingkat_display }} - {{ review.get_keputusan_display }}</strong><br>
+                <div class="alert alert-info mb-3">
+                    <strong>{{ review.get_tingkat_display }}</strong><br>
                     <small>Oleh: {{ review.aktor.username }} | {{ review.created_at|date:"d M Y, H:i" }}</small>
-                    {% if review.catatan %}
                     <hr class="mt-2 mb-2 border-dark">
+                    <p class="mb-1 small">
+                        <strong>Roadmap:</strong> 
+                        <span class="{% if review.keputusan_roadmap == 'APPROVE' %}text-success{% else %}text-danger{% endif %}">
+                            {{ review.get_keputusan_roadmap_display }}
+                        </span>
+                    </p>
+                    <p class="mb-1 small">
+                        <strong>Integrasi MK:</strong> 
+                        <span class="{% if review.keputusan_integrasi_mk == 'APPROVE' %}text-success{% else %}text-danger{% endif %}">
+                            {{ review.get_keputusan_integrasi_mk_display }}
+                        </span>
+                    </p>
+                    {% if review.catatan %}
                     <p class="mb-0 small"><strong>Catatan:</strong> {{ review.catatan }}</p>
                     {% endif %}
                 </div>
