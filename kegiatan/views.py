@@ -51,10 +51,11 @@ def tambah_kegiatan(request):
                 kegiatan.save()
                 form.save_m2m()
                 
-                dokumen = dokumen_form.save(commit=False)
-                dokumen.kegiatan = kegiatan
-                dokumen.jenis = 'PROPOSAL'
-                dokumen.save()
+                if dokumen_form.cleaned_data.get('file'):
+                    dokumen = dokumen_form.save(commit=False)
+                    dokumen.kegiatan = kegiatan
+                    dokumen.jenis = 'PROPOSAL'
+                    dokumen.save()
                 
             messages.success(request, 'Kegiatan berhasil ditambahkan.')
             return redirect('dosen_dashboard')
@@ -89,10 +90,11 @@ def edit_kegiatan(request, pk):
                 kegiatan.save()
                 form.save_m2m()
                 
-                dokumen = dokumen_form.save(commit=False)
-                dokumen.kegiatan = kegiatan
-                dokumen.jenis = 'PROPOSAL'
-                dokumen.save()
+                if dokumen_form.cleaned_data.get('file'):
+                    dokumen = dokumen_form.save(commit=False)
+                    dokumen.kegiatan = kegiatan
+                    dokumen.jenis = 'PROPOSAL'
+                    dokumen.save()
                 
             messages.success(request, 'Kegiatan berhasil diperbarui.')
             return redirect('detail_kegiatan', pk=kegiatan.pk)

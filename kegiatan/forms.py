@@ -57,6 +57,10 @@ class DokumenForm(forms.ModelForm):
             'deskripsi': 'Deskripsi Artikel'
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['file'].required = False
+
 class LaporanAkhirForm(forms.ModelForm):
     class Meta:
         model = Dokumen
