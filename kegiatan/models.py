@@ -97,7 +97,7 @@ class Dokumen(models.Model):
     
     kegiatan = models.ForeignKey(Kegiatan, on_delete=models.CASCADE, related_name='dokumen')
     jenis = models.CharField(max_length=20, choices=JENIS_CHOICES)
-    file = models.FileField(upload_to='dokumen_kegiatan/', validators=[validate_pdf_extension, validate_file_size])
+    file = models.FileField(upload_to='dokumen_kegiatan/', blank=True, null=True, validators=[validate_pdf_extension, validate_file_size])
     deskripsi = models.TextField(blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
